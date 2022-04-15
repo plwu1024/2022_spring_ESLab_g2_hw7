@@ -169,6 +169,10 @@ this example is not giving better SNR ...
 extern float32_t testInput_f32_1kHz_15kHz[TEST_LENGTH_SAMPLES];
 extern float32_t refOutput[TEST_LENGTH_SAMPLES];
 
+// extern float32_t mytestInput_f32_1kHz_15kHz[TEST_LENGTH_SAMPLES];
+// extern float32_t myrefOutput[TEST_LENGTH_SAMPLES];
+// float32_t *testInput_f32_1kHz_15kHz = mytestInput_f32_1kHz_15kHz;
+// float32_t *refOutput = myrefOutput;
 /* -------------------------------------------------------------------
  * Declare Test output buffer
  * ------------------------------------------------------------------- */
