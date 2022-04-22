@@ -226,12 +226,16 @@ int16_t pDataXYZ[320][3] = {0};
 int32_t main(void)
 {
     printf("hello0\n");
-    BSP_ACCELERO_Init();
-    for(int i = 0; i < 320; ++i){
+    /*
+     * this is for sensor value
+     * generate inputs for MATLAB and our program
+     */
+    // BSP_ACCELERO_Init();
+    // for(int i = 0; i < 320; ++i){
         
-        BSP_ACCELERO_AccGetXYZ(pDataXYZ[i]);
-        printf("accX: %d\n", pDataXYZ[i][0]);
-    }
+    //     BSP_ACCELERO_AccGetXYZ(pDataXYZ[i]);
+    //     printf("accX: %d\n", pDataXYZ[i][0]);
+    // }
   
   printf("hello\n");
   uint32_t i;
@@ -259,11 +263,13 @@ int32_t main(void)
   ** Compare the generated output against the reference output computed
   ** in MATLAB.
   ** ------------------------------------------------------------------- */
-
+  // just testing the output of the FIR in Mbed code
+    // for (int i = 0; i < 100; ++i)
+    //     printf(" output[%d] = %d\n", i, (int)testOutput[i]);
   snr = arm_snr_f32(&refOutput[0], &testOutput[0], TEST_LENGTH_SAMPLES);
 
   status = (snr < SNR_THRESHOLD_F32) ? ARM_MATH_TEST_FAILURE : ARM_MATH_SUCCESS;
-  
+  printf("snr = %d, threshold %d\n", (int)snr, (int)SNR_THRESHOLD_F32);
   if (status != ARM_MATH_SUCCESS)
   {
 #if defined (SEMIHOSTING)
