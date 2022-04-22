@@ -122,10 +122,19 @@
 /* ----------------------------------------------------------------------
 ** Include Files
 ** ------------------------------------------------------------------- */
+#include "mbed-trace/mbed_trace.h"
+#include "stm32l475e_iot01_accelero.h"
+#include "stm32l475e_iot01_gyro.h"
+#include "stm32l475e_iot01_hsensor.h"
+#include "stm32l475e_iot01_magneto.h"
+#include "stm32l475e_iot01_psensor.h"
+#include "stm32l475e_iot01_qspi.h"
+#include "stm32l475e_iot01_tsensor.h"
+#include "stm32l475e_iot01.h"
 
 #include "arm_math.h"
 #include "math_helper.h"
-
+#define SEMIHOSTING
 #if defined(SEMIHOSTING)
 #include <stdio.h>
 #endif
@@ -160,6 +169,10 @@ this example is not giving better SNR ...
 extern float32_t testInput_f32_1kHz_15kHz[TEST_LENGTH_SAMPLES];
 extern float32_t refOutput[TEST_LENGTH_SAMPLES];
 
+// extern float32_t mytestInput_f32_1kHz_15kHz[TEST_LENGTH_SAMPLES];
+// extern float32_t myrefOutput[TEST_LENGTH_SAMPLES];
+// float32_t *testInput_f32_1kHz_15kHz = mytestInput_f32_1kHz_15kHz;
+// float32_t *refOutput = myrefOutput;
 /* -------------------------------------------------------------------
  * Declare Test output buffer
  * ------------------------------------------------------------------- */
@@ -180,6 +193,7 @@ static float32_t firStateF32[BLOCK_SIZE + NUM_TAPS - 1];
 ** fir1(28, 6/24)
 ** ------------------------------------------------------------------- */
 #if defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE)
+printf("yes\n");
 const float32_t firCoeffs32[NUM_TAPS_ARRAY_SIZE] = {
   -0.0018225230f, -0.0015879294f, +0.0000000000f, +0.0036977508f, +0.0080754303f, +0.0085302217f, -0.0000000000f, -0.0173976984f,
   -0.0341458607f, -0.0333591565f, +0.0000000000f, +0.0676308395f, +0.1522061835f, +0.2229246956f, +0.2504960933f, +0.2229246956f,
@@ -187,6 +201,7 @@ const float32_t firCoeffs32[NUM_TAPS_ARRAY_SIZE] = {
   +0.0080754303f, +0.0036977508f, +0.0000000000f, -0.0015879294f, -0.0018225230f, 0.0f,0.0f,0.0f
 };
 #else
+
 const float32_t firCoeffs32[NUM_TAPS_ARRAY_SIZE] = {
   -0.0018225230f, -0.0015879294f, +0.0000000000f, +0.0036977508f, +0.0080754303f, +0.0085302217f, -0.0000000000f, -0.0173976984f,
   -0.0341458607f, -0.0333591565f, +0.0000000000f, +0.0676308395f, +0.1522061835f, +0.2229246956f, +0.2504960933f, +0.2229246956f,
@@ -207,9 +222,18 @@ float32_t  snr;
 /* ----------------------------------------------------------------------
  * FIR LPF Example
  * ------------------------------------------------------------------- */
-
+int16_t pDataXYZ[320][3] = {0};
 int32_t main(void)
 {
+    printf("hello0\n");
+    BSP_ACCELERO_Init();
+    for(int i = 0; i < 320; ++i){
+        
+        BSP_ACCELERO_AccGetXYZ(pDataXYZ[i]);
+        printf("accX: %d\n", pDataXYZ[i][0]);
+    }
+  
+  printf("hello\n");
   uint32_t i;
   arm_fir_instance_f32 S;
   arm_status status;
